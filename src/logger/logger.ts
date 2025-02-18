@@ -45,7 +45,7 @@ Stack Trace: ${stack_trace}
                 this.log(new Error('Log file was cleared due to size limit'));
             }
         } catch (err){
-            this.log(new Error(`Error checking log file size: ${err}`));
+            this.log(err, 'Error checking log file size');
         }
     }
 

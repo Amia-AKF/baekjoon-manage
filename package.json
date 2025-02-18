@@ -16,6 +16,10 @@
       {
         "command": "extension.createBaekjoonTemplate",
         "title": "backjoon folder"
+      },
+      {
+        "command": "extension.openBaekjoonFolder",
+        "title": "open backjoon folder"
       }
     ]
   },

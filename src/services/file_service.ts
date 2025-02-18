@@ -49,12 +49,42 @@ export class File_service {
         return elo_path;
     }
     
+    async get_problem_file(rootPath:string, problem_info: Problem_info ){
+        const elo_path = this.create_level_floder(rootPath, problem_info.level);
+        const problem_path =  path.join(elo_path, `backjoon_${problem_info.problem_num}`);
+        const file_path = path.join(problem_path, 'main.cpp');
+
+        try{
+            const document = await vscode.workspace.openTextDocument(file_path);
+            await vscode.window.showTextDocument(document);
+        }catch(err){
+            vscode.window.showErrorMessage(`파일을 여는 데 실패했습니다: ${err}`);
+            this.logger.log(err, `cant read file : ${problem_path}`);
+        }
+
+    }
+
+
     create_problem_file(rootPath: string, problem_info: Problem_info){
         const elo_path = this.create_level_floder(rootPath, problem_info.level);
         const problem_path =  path.join(elo_path, `backjoon_${problem_info.problem_num}`);
 
         if(fs.existsSync(problem_path)){
-                    vscode.window.showWarningMessage(`${problem_info.problem_num}번 문제파일이 이미 존재 하고 있습니다.`);
+                    vscode.window.showWarningMessage(`${problem_info.problem_num}번 문제파일이 이미 존재 하고 있습니다.`,
+                        {
+                            title: "열기",
+                            isCloseAffordance: false,
+                        },
+                        {
+                            title: "취소",
+                            isCloseAffordance: true,
+                        }
+                    ).then(selection => {
+                        if(selection?.title === "열기"){
+                            this.get_problem_file(rootPath,  problem_info);
+                            return;
+                        }
+                    });
                     return;
             }
 
