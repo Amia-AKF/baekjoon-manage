@@ -9,17 +9,19 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    
+  ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "extension.createBaekjoonTemplate",
-        "title": "backjoon folder"
+        "command": "extension.createBaekjoonTemplate.cpp",
+        "title": "Baekjoon: Create C++ Folder"
       },
       {
-        "command": "extension.openBaekjoonFolder",
-        "title": "open backjoon folder"
+        "command": "extension.createBaekjoonTemplate.py",
+        "title": "Baekjoon: Create Python Folder"
       }
     ]
   },

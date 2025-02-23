@@ -49,10 +49,25 @@ export class File_service {
         return elo_path;
     }
     
-    async get_problem_file(rootPath:string, problem_info: Problem_info ){
+    async get_problem_file(rootPath:string, problem_info: Problem_info){
         const elo_path = this.create_level_floder(rootPath, problem_info.level);
         const problem_path =  path.join(elo_path, `backjoon_${problem_info.problem_num}`);
-        const file_path = path.join(problem_path, 'main.cpp');
+        const files = fs.readdirSync(problem_path);
+        var file_path;
+
+        try{
+            for(const file of files){
+                if(file === "main.cpp" || file ==="main.py"){
+                    file_path = path.join(problem_path, file);
+                }
+            }
+        }  catch (err) {
+            this.logger.log(err, `cant find file: main.cpp of main.py`);
+        }
+        
+        if(!file_path){
+            return;
+        }
 
         try{
             const document = await vscode.workspace.openTextDocument(file_path);
@@ -65,7 +80,7 @@ export class File_service {
     }
 
 
-    create_problem_file(rootPath: string, problem_info: Problem_info){
+    async create_problem_file(rootPath: string, problem_info: Problem_info, arg: string){
         const elo_path = this.create_level_floder(rootPath, problem_info.level);
         const problem_path =  path.join(elo_path, `backjoon_${problem_info.problem_num}`);
 
@@ -89,8 +104,9 @@ export class File_service {
             }
 
         fs.mkdirSync(problem_path);
-        
-        const main_content = `/* 
+        var main_content;
+        if(arg === `cpp`){
+            main_content = `/* 
 * 백준 ${problem_info.problem_num}번 : ${problem_info.title_ko}
 *
 * 문제 주소 : https://www.acmicpc.net/problem/${problem_info.problem_num}
@@ -100,16 +116,29 @@ export class File_service {
 using namespace std;
         
 int main() {
-    ios_base::sync_with_stdio(false);
-    cin.tie(nullptr);
-            
+    
             
     return 0;
 }`;
+        } else if(arg === `py`){
+            main_content = `#
+# 백준 ${problem_info.problem_num}번 : ${problem_info.title_ko}
+#
+# 문제 주소 : https://www.acmicpc.net/problem/${problem_info.problem_num}
+#
+
+`;      
+        } else {
+            this.logger.log(new Error(`expected arg : cpp or py , but arg is ${arg}`));
+            return;
+        }
         
-        
-            fs.writeFileSync(path.join(problem_path, 'main.cpp'), main_content);
+            const main_file = `main.${arg}`;
+            fs.writeFileSync(path.join(problem_path, `${main_file}`), main_content);
             fs.writeFileSync(path.join(problem_path, 'solution process.txt'), '');
             vscode.window.showInformationMessage(`백준 ${problem_info.problem_num}번 폴더 및 파일 생성 완료!`);
+            const problem = path.join(problem_path, `${main_file}`);
+            const document = await vscode.workspace.openTextDocument(problem);
+            await vscode.window.showTextDocument(document);
         };
 }
