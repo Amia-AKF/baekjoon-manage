@@ -3,8 +3,10 @@ import { Problem_info } from "../types/problem";
 import { Logger } from "../logger/logger";
 
 export class Problem_service {
-    constructor(private logger: Logger){}
+    constructor(private logger: Logger){} // 로거 클래스인자
 
+
+    // api 요청
     async fetchProblemData(problemNumber: string): Promise<Problem_info | null> {
         const options = {
             method: 'GET',

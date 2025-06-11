@@ -4,42 +4,63 @@ import * as path from 'path';
 import { Logger } from '../logger/logger';
 import { Problem_info } from '../types/problem';
 
+
 export class File_service {
+
+    /**
+     * 생성자로 Logger 클래스를 받는다.
+     * @param logger 
+     */
     constructor(private logger: Logger){}
 
-    create_level_floder(rootPath: string , level: number){
+    private create_folder_ifnot_exists(folder_path: string): void{
+        if(!fs.existsSync(folder_path)){
+            fs.mkdirSync(folder_path);
+        }
+    }
+
+    /**
+     * 레벨에 따라 폴더를생성, 그 경로를 반환 ex) Bronze\3
+     * @param root_path 폴더 주소
+     * @param level 백준 문제 레벨
+     * @returns 문제 레벨 폴더 주소
+     */
+    public create_level_folder(root_path: string , level: number){
+        
+        //파이썬의 딕셔너리
+        const tier_map: {[key: string]: number[]} ={
+            'Bronze': [1, 2, 3, 4, 5],
+            'Silver': [6, 7, 8, 9, 10],
+            'Gold': [11, 12, 13, 14, 15],
+            'Platinum': [16, 17, 18, 19, 20],
+            'Diamond': [21, 22, 23, 24, 25],
+            'Ruby': [26, 27, 28, 29, 30],
+        };
+        
         const elo = [
-            '1',
-            '5', 
+            '1', // 가장 쉬움
+            '5', // 가장 어려움
             '4', 
             '3', 
             '2'
         ];
         
-        var level_path;
-        if (level === 0) {
-            level_path = 'Unrated';
-        } else if (level >= 26 && level <= 30) {
-            level_path = 'Ruby';
-        } else if (level >= 21 && level <= 25) {
-            level_path = 'Diamond';
-        } else if (level >= 16 && level <= 20) {
-            level_path = 'Platinum';
-        } else if (level >= 11 && level <= 15) {
-            level_path = 'Gold';
-        } else if (level >= 6 && level <= 10) {
-            level_path = 'Silver';
-        } else if (level >= 1 && level <= 5) {
-            level_path = 'Bronze';
+        // 레벨 범위에 따라 상위 폴더 결정
+        let tier = 'Unrated';
+        for (const [name, range] of Object.entries(tier_map)){
+            if (range.includes(level)){
+                tier = name;
+                break;
+            }
         }
-    
-        var elo_path = path.join(rootPath, `${level_path}`);
-    
-        if(!fs.existsSync(elo_path)){
-            fs.mkdirSync(elo_path);
-        } 
-    
+
+        // 티어 폴더 없으면 생성
+        var elo_path = path.join(root_path, tier);
+        this.create_folder_ifnot_exists(elo_path);
+        
+        // Unrated는 하위 숫자 폴더 없음
         if(!(level === 0)){
+            // 레벨 내부 숫자 (1~5 범위로 처리)
             var elo_path = path.join(elo_path, elo[level % 5]);
             if(!fs.existsSync(elo_path)){
                 fs.mkdirSync(elo_path);
@@ -48,13 +69,21 @@ export class File_service {
     
         return elo_path;
     }
-    
-    async get_problem_file(rootPath:string, problem_info: Problem_info){
-        const elo_path = this.create_level_floder(rootPath, problem_info.level);
+
+    /**
+     * 문제 파일을 보여주는 함수
+     * @param root_path 문제 레벨 폴더 주소
+     * @param problem_info 문제 정보
+     * @returns 
+     */
+    public async get_problem_file(root_path:string, problem_info: Problem_info){
+        
+        const elo_path = this.create_level_folder(root_path, problem_info.level);
         const problem_path =  path.join(elo_path, `backjoon_${problem_info.problem_num}`);
         const files = fs.readdirSync(problem_path);
-        var file_path;
+        
 
+        var file_path;
         try{
             for(const file of files){
                 if(file === "main.cpp" || file ==="main.py"){
@@ -63,8 +92,9 @@ export class File_service {
             }
         }  catch (err) {
             this.logger.log(err, `cant find file: main.cpp of main.py`);
+            return;
         }
-        
+
         if(!file_path){
             return;
         }
@@ -79,21 +109,23 @@ export class File_service {
 
     }
 
-
+    /**
+     * 문제 파일을 만듬
+     * @param rootPath 현재 워크 스페이스 주소
+     * @param problem_info 문제 정보
+     * @param arg 문제 확장자
+     * @returns 
+     */
     async create_problem_file(rootPath: string, problem_info: Problem_info, arg: string){
-        const elo_path = this.create_level_floder(rootPath, problem_info.level);
+        const elo_path = this.create_level_folder(rootPath, problem_info.level);
         const problem_path =  path.join(elo_path, `backjoon_${problem_info.problem_num}`);
 
+
+        // 파일이 이미 있으면 
         if(fs.existsSync(problem_path)){
                     vscode.window.showWarningMessage(`${problem_info.problem_num}번 문제파일이 이미 존재 하고 있습니다.`,
-                        {
-                            title: "열기",
-                            isCloseAffordance: false,
-                        },
-                        {
-                            title: "취소",
-                            isCloseAffordance: true,
-                        }
+                        {title: "열기", isCloseAffordance: false,},
+                        {title: "취소", isCloseAffordance: true, }
                     ).then(selection => {
                         if(selection?.title === "열기"){
                             this.get_problem_file(rootPath,  problem_info);
@@ -135,9 +167,9 @@ int main() {
         
             const main_file = `main.${arg}`;
             fs.writeFileSync(path.join(problem_path, `${main_file}`), main_content);
-            fs.writeFileSync(path.join(problem_path, 'solution process.txt'), '');
             vscode.window.showInformationMessage(`백준 ${problem_info.problem_num}번 폴더 및 파일 생성 완료!`);
             const problem = path.join(problem_path, `${main_file}`);
+
             const document = await vscode.workspace.openTextDocument(problem);
             await vscode.window.showTextDocument(document);
         };
