@@ -7,7 +7,7 @@ export class Problem_service {
 
 
     // api 요청
-    async fetchProblemData(problemNumber: string): Promise<Problem_info | null> {
+    public async fetch_problem_data(problemNumber: string): Promise<Problem_info | null> {
         const options = {
             method: 'GET',
             url: 'https://solved.ac/api/v3/problem/show',

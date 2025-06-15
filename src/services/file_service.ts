@@ -116,7 +116,7 @@ export class File_service {
      * @param arg 문제 확장자
      * @returns 
      */
-    async create_problem_file(rootPath: string, problem_info: Problem_info, arg: string){
+    public async create_problem_file(rootPath: string, problem_info: Problem_info, arg: string){
         const elo_path = this.create_level_folder(rootPath, problem_info.level);
         const problem_path =  path.join(elo_path, `backjoon_${problem_info.problem_num}`);
 
