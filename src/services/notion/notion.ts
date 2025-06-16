@@ -18,24 +18,22 @@ export class Notion_service {
         auth: process.env.NOTION_TOKEN
     });
 
-    public async make_notion_page() {
+
+    
+    public async make_notion_page(num: number, title_ko: string, off: string, sub: string, tag: string[]) {
         try {
             const response = await this.notion.pages.create({
                 parent: { database_id: "20f93ee51b77808fb77ce52aa529ed27" },
                 properties: set_baek_properties({
-                        number: 1000,
-                        title: "A+B",
-                        official_level: "Bronze V",
-                        sub_level: "⭐️⭐️",
-                        tags: ["수학", "구현"],
+                        number: num,
+                        title: title_ko,
+                        official_level: off,
+                        sub_level: sub,
+                        tags: tag,
                 }),
             });
         } catch (error) {
-            this.logger.log(error);
-            console.log("현재 디렉토리:", process.cwd());
-            console.log("NOTION_TOKEN:", process.env.NOTION_TOKEN);
-            console.log("현재 디렉토리:", path.resolve(__dirname, '../../../.env'));
-            
+            this.logger.log(error); 
         }
     }
 
