@@ -19,15 +19,7 @@ export class File_service {
         }
     }
 
-    /**
-     * 레벨에 따라 폴더를생성, 그 경로를 반환 ex) Bronze\3
-     * @param root_path 폴더 주소
-     * @param level 백준 문제 레벨
-     * @returns 문제 레벨 폴더 주소
-     */
-    public create_level_folder(root_path: string , level: number){
-        
-        //파이썬의 딕셔너리
+    public get_tier(level: number){
         const tier_map: {[key: string]: number[]} ={
             'Bronze': [1, 2, 3, 4, 5],
             'Silver': [6, 7, 8, 9, 10],
@@ -36,14 +28,6 @@ export class File_service {
             'Diamond': [21, 22, 23, 24, 25],
             'Ruby': [26, 27, 28, 29, 30],
         };
-        
-        const elo = [
-            '1', // 가장 쉬움
-            '5', // 가장 어려움
-            '4', 
-            '3', 
-            '2'
-        ];
         
         // 레벨 범위에 따라 상위 폴더 결정
         let tier = 'Unrated';
@@ -54,6 +38,32 @@ export class File_service {
             }
         }
 
+        return tier
+    }
+
+    public get_tier_num(level:number){
+        const elo = [
+            '1', // 가장 쉬움
+            '5', // 가장 어려움
+            '4', 
+            '3', 
+            '2'
+        ];
+
+        return elo[level % 5]
+    }
+
+
+    /**
+     * 레벨에 따라 폴더를생성, 그 경로를 반환 ex) Bronze\3
+     * @param root_path 폴더 주소
+     * @param level 백준 문제 레벨
+     * @returns 문제 레벨 폴더 주소
+     */
+    public create_level_folder(root_path: string , level: number){
+        
+        var tier = this.get_tier(level)
+
         // 티어 폴더 없으면 생성
         var elo_path = path.join(root_path, tier);
         this.create_folder_ifnot_exists(elo_path);
@@ -61,7 +71,7 @@ export class File_service {
         // Unrated는 하위 숫자 폴더 없음
         if(!(level === 0)){
             // 레벨 내부 숫자 (1~5 범위로 처리)
-            var elo_path = path.join(elo_path, elo[level % 5]);
+            var elo_path = path.join(elo_path, this.get_tier_num(level));
             if(!fs.existsSync(elo_path)){
                 fs.mkdirSync(elo_path);
             } 

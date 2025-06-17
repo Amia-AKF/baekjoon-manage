@@ -24,7 +24,7 @@ export function activate(context: vscode.ExtensionContext) {
     });
 
     let create_baek_notion_page = vscode.commands.registerCommand('extension.BaekjoonTemplate', async () =>{
-       await problem_manager.create_notion_file(problem_service, notion_service)
+       await problem_manager.create_notion_file(problem_service, notion_service, file_service)
     });
 
     context.subscriptions.push(create_baekjoon_cpp, create_baekjoon_py, create_baek_notion_page);
