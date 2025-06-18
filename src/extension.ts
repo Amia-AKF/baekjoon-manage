@@ -11,20 +11,20 @@ export function activate(context: vscode.ExtensionContext) {
     const file_service = new File_service(logger);
     const problem_service = new Problem_service(logger);
     const notion_service = new Notion_service(logger);
-    const problem_manager = new Problem_manager();
+    const problem_manager = new Problem_manager(problem_service , file_service);
 
 
     let create_baekjoon_cpp = vscode.commands.registerCommand('extension.createBaekjoonTemplate.cpp', async () =>{
-        await problem_manager.create_vsfile(problem_service, file_service, 'cpp');
+        await problem_manager.create_vsfile('cpp');
 
     });
 
     let create_baekjoon_py = vscode.commands.registerCommand('extension.createBaekjoonTemplate.py', async () =>{
-        await problem_manager.create_vsfile(problem_service, file_service, 'py');
+        await problem_manager.create_vsfile('py');
     });
 
     let create_baek_notion_page = vscode.commands.registerCommand('extension.BaekjoonTemplate', async () =>{
-       await problem_manager.create_notion_file(problem_service, notion_service, file_service)
+       await problem_manager.create_notion_file(notion_service);
     });
 
     context.subscriptions.push(create_baekjoon_cpp, create_baekjoon_py, create_baek_notion_page);

@@ -13,12 +13,18 @@ export class File_service {
      */
     constructor(private logger: Logger){}
 
+    // 폴더가 있는지 확인하고 없으면 생성
     private create_folder_ifnot_exists(folder_path: string): void{
         if(!fs.existsSync(folder_path)){
             fs.mkdirSync(folder_path);
         }
     }
 
+    /**
+     * 
+     * @param level 백준 api 레벨을 인자로 받음
+     * @returns Bronze | Silver | Gold | Platinum | Diamond | Ruby
+     */
     public get_tier(level: number){
         const tier_map: {[key: string]: number[]} ={
             'Bronze': [1, 2, 3, 4, 5],
@@ -38,7 +44,7 @@ export class File_service {
             }
         }
 
-        return tier
+        return tier;
     }
 
     public get_tier_num(level:number){
@@ -50,7 +56,7 @@ export class File_service {
             '2'
         ];
 
-        return elo[level % 5]
+        return elo[level % 5];
     }
 
 
@@ -62,7 +68,7 @@ export class File_service {
      */
     public create_level_folder(root_path: string , level: number){
         
-        var tier = this.get_tier(level)
+        var tier = this.get_tier(level);
 
         // 티어 폴더 없으면 생성
         var elo_path = path.join(root_path, tier);
