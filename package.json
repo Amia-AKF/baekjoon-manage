@@ -1,6 +1,6 @@
 {
-  "name": "backjoon-manage",
-  "displayName": "backjoon-manage",
+  "name": "beakjoon-manage",
+  "displayName": "beakjoon-manage",
   "description": "",
   "version": "0.0.1",
   "engines": {
@@ -15,15 +15,15 @@
     "commands": [
       {
         "command": "extension.createBaekjoonTemplate.cpp",
-        "title": "Baekjoon: Create C++ Folder"
+        "title": "Beakjoon: Create C++ Folder"
       },
       {
         "command": "extension.createBaekjoonTemplate.py",
-        "title": "Baekjoon: Create Python Folder"
+        "title": "Beakjoon: Create Python Folder"
       },
       {
         "command": "extension.BaekjoonTemplate",
-        "title": "Baekjoon: Create Notion File"
+        "title": "Beakjoon: Create Notion File"
       }
     ]
   },

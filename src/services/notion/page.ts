@@ -1,3 +1,4 @@
+import { register } from "module";
 
 type baek_properties = {
   number: number;
@@ -54,4 +55,44 @@ function set_baek_properties({
     return tem;
 }
 
-module.exports = {set_baek_properties};
+/**
+ * 
+ * @param text_type "paragraph", "bookmark" , "heading_2", "code" , ....
+ * @param text_content 내용
+ * @param link? link 
+ * @param languages? 언어
+ * @returns 
+ */
+function make_rich_text({text_type, text_content, link, languages}:{text_type: string, text_content:string, link?: string, languages?: string}){
+        const obj: any = {
+            type: "text",
+            text: {
+                content: text_content
+                }
+        };
+
+        if(link){
+            obj.text.link = {url : link};
+        }
+
+        if(languages){
+            return {
+                type: text_type,
+                [text_type]: {
+                rich_text: [obj],
+                language: languages
+                },
+            };
+        }
+
+        return {
+            type: text_type,
+            [text_type]: {
+                rich_text: [obj],
+            },
+        };
+    }
+
+
+
+module.exports = {set_baek_properties, make_rich_text};

@@ -5,23 +5,27 @@ import { Notion_service } from '../services/notion/notion';
 
 
 export class Problem_manager{
-    
+    private tags: string[] = ["DFS", "BFS", "이진 탐색","기타(직접 입력)"];
     
     constructor(private problem_service: Problem_service, private file_service: File_service){
     }
 
     /**
-     * 
-     * @param problem_service 문제 정보 가져오기
+     * 문제 정보 가져오기
      * @returns problem_info
      */
-    public async get_problem_info(){
+    private async get_problem_info(){
         const problemNumber = await vscode.window.showInputBox({ prompt: "백준 문제 번호를 입력하세요" , placeHolder: "1000"},);
         
         if(!problemNumber){
             return;
         }
             
+        if (isNaN(parseInt(problemNumber)) === true || parseInt(problemNumber) < 1000 ) {
+            vscode.window.showErrorMessage("1000 이상인 숫자를 입력 해주세요.");
+            return;
+        }
+
         const problem_info = await vscode.window.withProgress({
             location: vscode.ProgressLocation.Notification,
             title: "백준 문제 정보 가져오는 중...",
@@ -31,6 +35,11 @@ export class Problem_manager{
         return problem_info;
     }
     
+    /**
+     * vs code 폴더 및 파일 생성
+     * @param type 확장자
+     * @returns 
+     */
     public async create_vsfile(type: string){
         const workspaceFolders = vscode.workspace.workspaceFolders;
         if (!workspaceFolders) {
@@ -65,10 +74,10 @@ export class Problem_manager{
         }
 
         const items: vscode.QuickPickItem[] = [
-    { label: "⭐", description: "쉬움" },
-    { label: "⭐⭐", description: "보통" },
-    { label: "⭐⭐⭐", description: "어려움" }
-];
+            { label: "⭐",     description: "쉬움" },
+            { label: "⭐⭐",   description: "보통" },
+            { label: "⭐⭐⭐", description: "어려움" }
+        ];
 
         let sub_lev = await vscode.window.showQuickPick(
             items, 
@@ -76,8 +85,9 @@ export class Problem_manager{
                 placeHolder: "주관적인 난이도를 선택하세요"
             }
         );
-        let tags = await vscode.window.showQuickPick(
-            ["DFS", "BFS", "이진 탐색","기타(직접 입력)"], 
+
+        let tag = await vscode.window.showQuickPick(
+            this.tags, 
             {
                 canPickMany:true, 
                 placeHolder: "알고리즘 유형을 선택하거나 직접 입력하세요",
@@ -85,17 +95,15 @@ export class Problem_manager{
             }
         );
         
-        if(!sub_lev || !tags){
+        if(!sub_lev || !tag){
             return;
         }
 
-        let final_tags = tags;
 
-        if (tags.includes("기타(직접 입력)")){
-            tags.pop();
+        if (tag.includes("기타(직접 입력)")){
+            tag.pop();
             const input = await vscode.window.showInputBox({ 
-                prompt: "직접 알고리즘 유형을 입력하세요", 
-                placeHolder: "DFS",
+                prompt: "알고리즘 유형을 입력하세요", 
                 validateInput: text => text.trim() === "" ? "입력은 필수입니다." : null
             },);
 
@@ -103,7 +111,11 @@ export class Problem_manager{
                 return;
             }
 
-            final_tags.push(input);
+            if (!this.tags.includes(input)){
+                this.tags.splice(this.tags.length - 1, 0, input);
+            }
+
+            tag.push(input);
         }
 
         const tier = this.file_service.get_tier(problem_info.level);
@@ -114,8 +126,11 @@ export class Problem_manager{
                     location: vscode.ProgressLocation.Notification,
                     title: "노션에다 내용 쓰는 중",
                     cancellable: false
-                }, () => notion_service.make_notion_page(problem_info.problem_num, problem_info.title_ko, tier + tier_num , "sub_lev", tags));
-        }
+                }, () => notion_service.make_notion_page(problem_info.problem_num, problem_info.title_ko, tier + tier_num , sub_lev.label, tag));
+                
+        vscode.window.showInformationMessage(`문제 ${problem_info.problem_num}번 노션 파일 생성 완료!`);
+    }
     
+
     
 }

@@ -3,8 +3,9 @@ import * as path from 'path';
 require('dotenv').config({ path: path.resolve(__dirname, '../../../.env')  });
 
 const { Client } = require("@notionhq/client");
-const { set_baek_properties } = require("./page");
+const { set_baek_properties, make_rich_text } = require("./page");
 import { Logger } from '../../logger/logger';
+import { languages } from 'vscode';
 
 export class Notion_service {
 
@@ -31,25 +32,24 @@ export class Notion_service {
                         sub_level: sub,
                         tags: tag,
                 }),
+                children: [
+                    make_rich_text({text_type: "heading_2" ,  text_content:`문제 개요`}),
+                    make_rich_text({text_type: "heading_3" ,  text_content:
+`문제 번호 : ${num}
+문제 제목 : ${title_ko}
+난이도 : ${off} , ${sub}
+유형 : ${tag}
+`}),
+                    make_rich_text({text_type: "heading_2", text_content: "🧠 해결 아이디어"}),
+                    make_rich_text({text_type: "paragraph", text_content: ""}),
+                    make_rich_text({text_type: "heading_2", text_content: "💻 풀이 코드 "}),
+                    make_rich_text({text_type: "paragraph", text_content: ""}),
+                    make_rich_text({text_type: "code", text_content: "여기에 코드 작성", languages: "python"}),
+                    make_rich_text({text_type: "heading_2", text_content:"📌 메모 / 실수한 점"})
+                ]
             });
         } catch (error) {
             this.logger.log(error); 
         }
-    }
-
-    private make_rich_text(text_type:string, text_content:string){
-        return {
-            type: text_type,
-            [text_type]: {
-                rich_text: [
-                    {   
-                        type: "text",
-                        text: {
-                            content: text_content
-                        },},],
-            },
-        };
-    }
-            
-
+    } 
 };

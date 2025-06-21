@@ -95,7 +95,7 @@ export class File_service {
     public async get_problem_file(root_path:string, problem_info: Problem_info){
         
         const elo_path = this.create_level_folder(root_path, problem_info.level);
-        const problem_path =  path.join(elo_path, `backjoon_${problem_info.problem_num}`);
+        const problem_path =  path.join(elo_path, `beakjoon_${problem_info.problem_num}`);
         const files = fs.readdirSync(problem_path);
         
 
@@ -134,7 +134,7 @@ export class File_service {
      */
     public async create_problem_file(rootPath: string, problem_info: Problem_info, arg: string){
         const elo_path = this.create_level_folder(rootPath, problem_info.level);
-        const problem_path =  path.join(elo_path, `backjoon_${problem_info.problem_num}`);
+        const problem_path =  path.join(elo_path, `beakjoon_${problem_info.problem_num}`);
 
 
         // 파일이 이미 있으면 
