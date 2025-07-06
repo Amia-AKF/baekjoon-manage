@@ -122,9 +122,10 @@ export class Problem_manager{
             if (!this.tags.includes(input)){
                 this.tags.splice(this.tags.length - 1, 0, input);
             }
-             
+            
+
             tag.push(input);
-            await this.config.update("manageTags", this.tags, vscode.ConfigurationTarget.Workspace);
+            await this.config.update("manageTags", this.tags.join(","), vscode.ConfigurationTarget.Workspace);
         }
 
         const tier = this.file_service.get_tier(problem_info.level);
