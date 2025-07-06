@@ -1,6 +1,7 @@
 {
-  "name": "beakjoon-manage",
-  "displayName": "beakjoon-manage",
+  "name": "baekjoon-manage",
+  "publisher": "Amia",
+  "displayName": "baekjoon-manage",
   "description": "",
   "version": "0.0.1",
   "engines": {
@@ -12,18 +13,28 @@
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
+     "configuration": {
+      "title": "Baekjoon",
+      "properties": {
+        "baekjoon-manage.manageTags": {
+          "type": "string",
+          "default": "기타(직접 입력)",
+          "description": "콤마(,)로 구분된 태그 목록 예: dfs, bfs, 재귀"
+        }
+      } 
+    },
     "commands": [
       {
         "command": "extension.createBaekjoonTemplate.cpp",
-        "title": "Beakjoon: Create C++ Folder"
+        "title": "Baekjoon: Create C++ Folder"
       },
       {
         "command": "extension.createBaekjoonTemplate.py",
-        "title": "Beakjoon: Create Python Folder"
+        "title": "Baekjoon: Create Python Folder"
       },
       {
         "command": "extension.BaekjoonTemplate",
-        "title": "Beakjoon: Create Notion File"
+        "title": "Baekjoon: Create Notion File"
       }
     ]
   },

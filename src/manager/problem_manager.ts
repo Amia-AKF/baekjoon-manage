@@ -5,7 +5,15 @@ import { Notion_service } from '../services/notion/notion';
 
 
 export class Problem_manager{
-    private tags: string[] = ["DFS", "BFS", "이진 탐색","기타(직접 입력)"];
+
+    private config = vscode.workspace.getConfiguration('baekjoon-manage');
+    private raw_tags = this.config.get<string>('manageTags') ?? '';
+    private tags = this.raw_tags
+        .split(',')
+        .map(tag => tag.trim())
+        .filter(tag => tag.length > 0);
+        
+    
     
     constructor(private problem_service: Problem_service, private file_service: File_service){
     }
@@ -90,7 +98,7 @@ export class Problem_manager{
             this.tags, 
             {
                 canPickMany:true, 
-                placeHolder: "알고리즘 유형을 선택하거나 직접 입력하세요",
+                placeHolder: "알고리즘 유형을 선택하거나 직접 입력 하려면 기타를 클릭 해주세요 (space)",
                 
             }
         );
@@ -114,20 +122,29 @@ export class Problem_manager{
             if (!this.tags.includes(input)){
                 this.tags.splice(this.tags.length - 1, 0, input);
             }
-
+             
             tag.push(input);
+            await this.config.update("manageTags", this.tags, vscode.ConfigurationTarget.Workspace);
         }
 
         const tier = this.file_service.get_tier(problem_info.level);
         const tier_num = this.file_service.get_tier_num(problem_info.level);
 
+        const editer = vscode.window.activeTextEditor;
+        
+        if(!editer){
+            return;
+        }
+
+        const document = editer.document;
+        const answer = document.getText();
 
         await vscode.window.withProgress({
                     location: vscode.ProgressLocation.Notification,
                     title: "노션에다 내용 쓰는 중",
                     cancellable: false
-                }, () => notion_service.make_notion_page(problem_info.problem_num, problem_info.title_ko, tier + tier_num , sub_lev.label, tag));
-                
+                }, () => notion_service.make_notion_page(problem_info.problem_num, problem_info.title_ko, tier + tier_num , sub_lev.label, tag, answer));
+            
         vscode.window.showInformationMessage(`문제 ${problem_info.problem_num}번 노션 파일 생성 완료!`);
     }
     

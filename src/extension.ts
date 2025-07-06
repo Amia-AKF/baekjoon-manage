@@ -27,6 +27,7 @@ export function activate(context: vscode.ExtensionContext) {
        await problem_manager.create_notion_file(notion_service);
     });
 
+
     context.subscriptions.push(create_baekjoon_cpp, create_baekjoon_py, create_baek_notion_page);
 }
 

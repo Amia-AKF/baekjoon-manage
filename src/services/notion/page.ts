@@ -1,5 +1,3 @@
-import { register } from "module";
-
 type baek_properties = {
   number: number;
   title: string;
@@ -48,7 +46,7 @@ function set_baek_properties({
                             "name": sub_level
                         }
                     },
-                    "알고리즘 유형": {
+                    "태그": {
                         "multi_select": tags.map((tag) => ({name: tag}))
                     },
                 };
@@ -63,8 +61,12 @@ function set_baek_properties({
  * @param languages? 언어
  * @returns 
  */
-function make_rich_text({text_type, text_content, link, languages}:{text_type: string, text_content:string, link?: string, languages?: string}){
-        const obj: any = {
+function make_rich_text(text_type: string, text_content: string , options?: {link?: string, languages?: string}){
+    
+    const link = options?.link;
+    const languages = options?.languages;
+    
+    const obj: any = {
             type: "text",
             text: {
                 content: text_content
