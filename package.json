@@ -7,6 +7,12 @@
     "type": "git",
     "url": "https://github.com/Amia-AKF/baekjoon-manage"
   },
+  "author": {
+    "name": "Amia"
+  },
+  "bugs": {
+    "url": "https://github.com/Amia-AKF/baekjoon-manage/issues"
+  },
   "version": "1.0.0",
   "license": "MIT",
   "engines": {
