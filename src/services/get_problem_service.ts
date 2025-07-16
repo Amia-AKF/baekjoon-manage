@@ -17,6 +17,7 @@ export class Problem_service {
         
           try {
             const { data } = await axios.request(options);
+            console.log("api 실행")
             return {
                 title_ko: data.titleKo,
                 level: data.level,

@@ -87,19 +87,25 @@ export class File_service {
     }
 
     /**
-     * 문제 파일을 보여주는 함수
+     * 문제 파일의 document(주소)를 얻는 함수
      * @param root_path 문제 레벨 폴더 주소
      * @param problem_info 문제 정보
-     * @returns 
+     * @returns document
      */
     public async get_problem_file(root_path:string, problem_info: Problem_info){
         
         const elo_path = this.create_level_folder(root_path, problem_info.level);
         const problem_path =  path.join(elo_path, `baekjoon_${problem_info.problem_num}`);
-        const files = fs.readdirSync(problem_path);
         
-
+        try {
+            var files = fs.readdirSync(problem_path);
+        } catch (err) {
+            this.logger.log(err, `can't find folder: baekjoon_${problem_info.problem_num}`);
+            return;
+        }
+        
         var file_path;
+
         try{
             for(const file of files){
                 if(file === "main.cpp" || file ==="main.py"){
@@ -107,7 +113,7 @@ export class File_service {
                 }
             }
         }  catch (err) {
-            this.logger.log(err, `cant find file: main.cpp of main.py`);
+            this.logger.log(err, `can't find file: main.cpp or main.py`);
             return;
         }
 
@@ -117,12 +123,29 @@ export class File_service {
 
         try{
             const document = await vscode.workspace.openTextDocument(file_path);
-            await vscode.window.showTextDocument(document);
+            return document;
         }catch(err){
             vscode.window.showErrorMessage(`파일을 여는 데 실패했습니다: ${err}`);
             this.logger.log(err, `cant read file : ${problem_path}`);
         }
+    }
 
+
+    /**
+     * 문제 파일을 보여주는 함수
+     * @param root_path 문제 레벨 폴더 주소
+     * @param problem_info 문제 정보
+     * @returns 
+     */
+    public async show_problem_file(root_path:string, problem_info: Problem_info){
+        
+        const document = await this.get_problem_file(root_path, problem_info);
+
+        if(!document){
+            return;
+        }
+
+        await vscode.window.showTextDocument(document);
     }
 
     /**
@@ -144,7 +167,7 @@ export class File_service {
                         {title: "취소", isCloseAffordance: true, }
                     ).then(selection => {
                         if(selection?.title === "열기"){
-                            this.get_problem_file(rootPath,  problem_info);
+                            this.show_problem_file(rootPath,  problem_info);
                             return;
                         }
                     });
@@ -185,7 +208,7 @@ int main() {
             fs.writeFileSync(path.join(problem_path, `${main_file}`), main_content);
             vscode.window.showInformationMessage(`백준 ${problem_info.problem_num}번 폴더 및 파일 생성 완료!`);
             const problem = path.join(problem_path, `${main_file}`);
-
+            
             const document = await vscode.workspace.openTextDocument(problem);
             await vscode.window.showTextDocument(document);
         };

@@ -1,42 +1,117 @@
 {
   "name": "baekjoon-manage",
   "publisher": "Amia",
-  "displayName": "baekjoon-manage",
-  "description": "",
-  "version": "0.0.1",
+  "displayName": "Baekjoon Problem Manager",
+  "description": "백준 문제 자동 정리하고 Notion에 백업하는 익스텐션입니다.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Amia-AKF/baekjoon-manage"
+  },
+  "version": "1.0.0",
+  "license": "MIT",
   "engines": {
     "vscode": "^1.97.0"
   },
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": ["onStartupFinished"],
   "main": "./out/extension.js",
   "contributes": {
-     "configuration": {
-      "title": "Baekjoon",
+    "configuration": {
+      "title": "Baekjoon Problem Manager",
       "properties": {
+        "baekjoon-manage.enableNotionFeature":{
+          "type": "boolean",
+          "default": true,
+          "description": "노션 기능 활성화 여부",
+          "order": 0
+        },
+        "baekjoon-manage.database_id": {
+          "type": "string",
+          "description": "노션 페이지 id",
+          "order": 1
+        },
         "baekjoon-manage.manageTags": {
           "type": "string",
           "default": "기타(직접 입력)",
-          "description": "콤마(,)로 구분된 태그 목록 예: dfs, bfs, 재귀"
+          "description": "콤마(,)로 구분된 태그 목록 예: dfs, bfs, 재귀 //기타(직접 입력)은 필수입니다.",
+          "order": 2
         }
-      } 
+      }
     },
     "commands": [
       {
         "command": "extension.createBaekjoonTemplate.cpp",
-        "title": "Baekjoon: Create C++ Folder"
+        "title": "Create C++ Folder",
+        "category": "Baekjoon Manager"
       },
       {
         "command": "extension.createBaekjoonTemplate.py",
-        "title": "Baekjoon: Create Python Folder"
+        "title": "Create Python Folder",
+        "category": "Baekjoon Manager"
       },
       {
-        "command": "extension.BaekjoonTemplate",
-        "title": "Baekjoon: Create Notion File"
+        "command": "extension.createNotionFromInput",
+        "title": "Create Notion File From Input",
+        "category": "Baekjoon Manager"
+      },
+      {
+        "command": "extension.createNotionFromEditor",
+        "title": "Create Notion File From Editor",
+        "category": "Baekjoon Manager"
+      },
+      {
+        "command": "extension.delNotionToken",
+        "title": "Delete Notion Token",
+        "category": "Baekjoon Manager"
+      },
+      {
+        "command": "extension.changeNotionToken",
+        "title": "Change Notion Token",
+        "category": "Baekjoon Manager"
+      },
+      {
+        "command": "extension.changeNotionDatabaseID",
+        "title": "Change Notion DatabaseID",
+        "category": "Baekjoon Manager"
       }
-    ]
+    ],
+    "keybindings": [
+      {
+        "command": "extension.createBaekjoonTemplate.py",
+        "key": "ctrl+alt+p"
+      },
+      {
+        "command": "extension.createNotionFromEditor",
+        "key": "ctrl+alt+n"
+      }
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "extension.createNotionFromInput",
+          "when": "config.baekjoon-manage.enableNotionFeature"
+        },
+        {
+          "command": "extension.createNotionFromEditor",
+          "when": "config.baekjoon-manage.enableNotionFeature"
+        },
+        {
+          "command": "extension.delNotionToken",
+          "when": "config.baekjoon-manage.enableNotionFeature"
+        },
+        {
+          "command": "extension.changeNotionToken",
+          "when": "config.baekjoon-manage.enableNotionFeature"
+        },
+        {
+          "command": "extension.changeNotionDatabaseID",
+          "when": "config.baekjoon-manage.enableNotionFeature"
+        }
+  
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
