@@ -27,7 +27,7 @@ function set_baek_properties({
                     "문제 번호": {
                         "number": number
                     },
-                    "문제 이름": {
+                    "문제 제목": {
                         title: [
                             {
                                 text: {

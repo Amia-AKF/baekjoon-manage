@@ -28,9 +28,6 @@ export class Logger {
         this.log_path = path.join(folders[0].uri.fsPath, 'logs');
         this.log_file = path.join(this.log_path, 'error.log');
 
-        if(!fs.existsSync(this.log_path)){
-            fs.mkdirSync(this.log_path);
-        }
     }
 
     /**
@@ -39,6 +36,11 @@ export class Logger {
      * @param additional_info 추가 정보 문자열 (선택)
      */
     public log(error: any, additional_info: string = ''): void {
+
+        if(!fs.existsSync(this.log_path)){
+            fs.mkdirSync(this.log_path);
+        }
+
         const time_stamp = new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' });
         const error_message = error.message || error.toSring();
         const stack_trace = error.stack || 'No stack trace available';

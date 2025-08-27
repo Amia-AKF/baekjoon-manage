@@ -45,7 +45,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
     let change_notion_token = vscode.commands.registerCommand('extension.changeNotionToken', async () => {
         try{
-            notion_manager.change_notion_token();
+            await notion_manager.change_notion_token();
         } catch (err){
             vscode.window.showErrorMessage("토큰 변경 실패");
             logger.log(err, "토큰 변경 실패");
@@ -54,7 +54,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
     let change_page_id = vscode.commands.registerCommand('extension.changeNotionDatabaseID', async () => {
         try{
-            notion_manager.change_database_id();
+            await notion_manager.change_database_id();
         } catch (err){
             vscode.window.showErrorMessage("id 변경 실패");
             logger.log(err, "id 변경 실패");
