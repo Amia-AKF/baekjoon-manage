@@ -2,6 +2,8 @@ import * as vscode from 'vscode';
 import { Logger } from './logger/logger';
 import { Problem_manager } from './manager/problem_manager';
 import { Notion_manager } from './manager/notion_manger';
+import { File_service } from './services/file_service';
+import { Problem_service } from './services/get_problem_service';
 
 
 export async function activate(context: vscode.ExtensionContext) {
@@ -11,8 +13,14 @@ export async function activate(context: vscode.ExtensionContext) {
 
     
     const logger = new Logger();
-    const problem_manager = new Problem_manager(logger);
-    const notion_manager = new Notion_manager(logger, context, config);
+
+    const file_service = new File_service(logger);
+    const problem_service = new Problem_service(logger);
+
+
+    const problem_manager = new Problem_manager(logger, file_service, problem_service);
+    const notion_manager = new Notion_manager(logger, context, config, file_service, problem_service);
+
 
     if(is_notion_active){
         notion_manager.init();

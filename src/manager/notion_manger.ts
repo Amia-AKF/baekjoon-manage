@@ -8,19 +8,15 @@ import path from 'path';
 
 export class Notion_manager {
 
-    private problem_service: Problem_service;
-    private file_service: File_service;
     private notion_service: Notion_service;
 
     private raw_tags: string;
     private tags: string[];
 
-    constructor(private logger: Logger, private context: vscode.ExtensionContext, private config: vscode.WorkspaceConfiguration) {
-        this.problem_service = new Problem_service(logger);
-        this.file_service = new File_service(logger);
+    constructor(private logger: Logger, private context: vscode.ExtensionContext, private config: vscode.WorkspaceConfiguration, private file_service: File_service, private problem_service: Problem_service) {
         this.notion_service = new Notion_service(logger);
 
-        this.raw_tags = this.config.get<string>('manageTags') ?? '';
+        this.raw_tags = this.config.get<string>('manageTags') ?? '기타(직접 입력)';
         this.tags = this.raw_tags
             .split(',')
             .map(tag => tag.trim())
@@ -53,7 +49,7 @@ export class Notion_manager {
             return true;
         }
 
-        return false
+        return false;
     }
 
     public async create_notion_file(problem_info: Problem_info , document: vscode.TextDocument) {
@@ -226,7 +222,7 @@ export class Notion_manager {
                 await this.get_notion_token();
             } else {
                 vscode.window.showErrorMessage("토큰을 입력해야 노션 기능을 이용 가능합니다.");
-                //this.config.update("enableNotionFeature", false, vscode.ConfigurationTarget.Global);
+                this.config.update("enableNotionFeature", false, vscode.ConfigurationTarget.Global);
                 return;
             };
         }
@@ -242,7 +238,7 @@ export class Notion_manager {
                 await this.get_database_id();
             } else {
                 vscode.window.showErrorMessage("database_id을 입력해야 노션 기능을 이용 가능합니다.");
-                //this.config.update("enableNotionFeature", false, vscode.ConfigurationTarget.Global);
+                this.config.update("enableNotionFeature", false, vscode.ConfigurationTarget.Global);
                 return;
             };
         }

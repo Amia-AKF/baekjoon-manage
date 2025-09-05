@@ -5,13 +5,7 @@ import { Logger } from '../logger/logger';
 
 
 export class Problem_manager{
-    
-    private problem_service: Problem_service;
-    private file_service: File_service;
-
-    constructor(private logger: Logger){
-        this.problem_service = new Problem_service(logger);
-        this.file_service = new File_service(logger);
+    constructor(private logger: Logger, private file_service: File_service, private problem_service: Problem_service){
     }
 
     /**
