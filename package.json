@@ -58,6 +58,16 @@
         "category": "Baekjoon Manager"
       },
       {
+        "command": "extension.createBaekjoonTemplate.java",
+        "title": "Create Java Folder",
+        "category": "Baekjoon Manager"
+      },
+      {
+        "command": "extension.createBaekjoonTemplate.js",
+        "title": "Create Js Folder",
+        "category": "Baekjoon Manager"
+      },
+      {
         "command": "extension.createNotionFromInput",
         "title": "Create Notion File From Input",
         "category": "Baekjoon Manager"

@@ -108,12 +108,13 @@ export class File_service {
 
         try{
             for(const file of files){
-                if(file === "main.cpp" || file ==="main.py"){
+                if(file.startsWith("main.")){
                     file_path = path.join(problem_path, file);
+                    break;
                 }
             }
         }  catch (err) {
-            this.logger.log(err, `can't find file: main.cpp or main.py`);
+            this.logger.log(err, `can't find file`);
             return;
         }
 
@@ -164,25 +165,27 @@ export class File_service {
 
         // 파일이 이미 있으면 
         if(fs.existsSync(problem_path)){
-                    await vscode.window.showWarningMessage(`${problem_info.problem_num}번 문제파일이 이미 존재 하고 있습니다.`,
+            const selection = await vscode.window.showWarningMessage(`${problem_info.problem_num}번 문제파일이 이미 존재 하고 있습니다.`,
                         {title: "열기", isCloseAffordance: false,},
                         {title: "한번 더 풀기", isCloseAffordance: false,},
                         {title: "취소", isCloseAffordance: true, }
-                    ).then(selection => {
-                        if(selection?.title === "열기"){
-                            this.show_problem_file(rootPath,  problem_info);
-                            return;
-                        } else if (selection?.title === "한번 더 풀기") {
-                            isResolve = true;
-                        } else {
-                            return;
-                        }
-                    });
+                    );
+                        
+            if(selection?.title === "열기"){
+                this.show_problem_file(rootPath,  problem_info);
+                return;
+            } else if (selection?.title === "한번 더 풀기") {
+                isResolve = true;
+            } else {
+                return;
+            }
+
             }
         
         if (!fs.existsSync(problem_path)){
             fs.mkdirSync(problem_path);
         }
+        
         var main_content;
         if(arg === `py`){
             main_content = `#
