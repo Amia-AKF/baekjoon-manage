@@ -1,6 +1,6 @@
 {
-  "name": "baekjoon-manage",
-  "publisher": "Amia",
+  "name": "baekjoon-manager-with-notion",
+  "publisher": "Amia-bmwn",
   "displayName": "Baekjoon Problem Manager",
   "description": "백준 문제 자동 정리하고 Notion에 백업하는 익스텐션입니다.",
   "repository": {
@@ -13,7 +13,7 @@
   "bugs": {
     "url": "https://github.com/Amia-AKF/baekjoon-manage/issues"
   },
-  "version": "1.0.0",
+  "version": "1.1.0",
   "license": "MIT",
   "engines": {
     "vscode": "^1.97.0"

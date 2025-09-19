@@ -131,6 +131,7 @@ export class File_service {
     }
 
 
+
     /**
      * 문제 파일을 보여주는 함수
      * @param root_path 문제 레벨 폴더 주소
@@ -156,25 +157,32 @@ export class File_service {
      * @returns 
      */
     public async create_problem_file(rootPath: string, problem_info: Problem_info, arg: string){
+
         const elo_path = this.create_level_folder(rootPath, problem_info.level);
         const problem_path =  path.join(elo_path, `baekjoon_${problem_info.problem_num}`);
-
+        let isResolve = false;
 
         // 파일이 이미 있으면 
         if(fs.existsSync(problem_path)){
-                    vscode.window.showWarningMessage(`${problem_info.problem_num}번 문제파일이 이미 존재 하고 있습니다.`,
+                    await vscode.window.showWarningMessage(`${problem_info.problem_num}번 문제파일이 이미 존재 하고 있습니다.`,
                         {title: "열기", isCloseAffordance: false,},
+                        {title: "한번 더 풀기", isCloseAffordance: false,},
                         {title: "취소", isCloseAffordance: true, }
                     ).then(selection => {
                         if(selection?.title === "열기"){
                             this.show_problem_file(rootPath,  problem_info);
                             return;
+                        } else if (selection?.title === "한번 더 풀기") {
+                            isResolve = true;
+                        } else {
+                            return;
                         }
                     });
-                    return;
             }
-
-        fs.mkdirSync(problem_path);
+        
+        if (!fs.existsSync(problem_path)){
+            fs.mkdirSync(problem_path);
+        }
         var main_content;
         if(arg === `cpp`){
             main_content = `/* 
@@ -184,7 +192,6 @@ export class File_service {
 */
         
 #include <iostream>
-using namespace std;
         
 int main() {
     
@@ -203,8 +210,25 @@ int main() {
             this.logger.log(new Error(`expected arg : cpp or py , but arg is ${arg}`));
             return;
         }
-        
-            const main_file = `main.${arg}`;
+            let main_file = "";
+
+            if (isResolve){
+
+                let files = fs.readdirSync(problem_path);
+                let idx = 0;
+
+                for (const file of files){
+                    if (/^[0-9]$/.test((file.slice(4, 5)))){
+                        idx = Math.max(idx, Number(file.slice(4, 5)));
+                    }
+                }
+                
+                main_file = `main${idx + 1}.${arg}`;
+
+            } else {
+                main_file = `main.${arg}`;
+            }
+
             fs.writeFileSync(path.join(problem_path, `${main_file}`), main_content);
             vscode.window.showInformationMessage(`백준 ${problem_info.problem_num}번 폴더 및 파일 생성 완료!`);
             const problem = path.join(problem_path, `${main_file}`);

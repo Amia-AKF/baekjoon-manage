@@ -18,7 +18,7 @@ export class Problem_manager{
             vscode.window.showErrorMessage("1000 이상인 숫자를 입력 해주세요.");
             return;
         }
-
+            
         const problem_info = await vscode.window.withProgress({
             location: vscode.ProgressLocation.Notification,
             title: "백준 문제 정보 가져오는 중...",

@@ -159,10 +159,10 @@ export class Notion_manager {
         const document = await this.file_service.get_problem_file(rootPath, problem_info);
 
         if(!document){
-            return
+            return;
         }
 
-        await this.create_notion_file(problem_info, document)
+        await this.create_notion_file(problem_info, document);
     }
 
     public async upload_problem_from_editor(){
@@ -197,7 +197,7 @@ export class Notion_manager {
             return;
         }
 
-        await this.create_notion_file(problem_info, document)
+        await this.create_notion_file(problem_info, document);
     }
 
 
