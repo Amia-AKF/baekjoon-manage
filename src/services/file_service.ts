@@ -184,56 +184,48 @@ export class File_service {
             fs.mkdirSync(problem_path);
         }
         var main_content;
-        if(arg === `cpp`){
-            main_content = `/* 
-* 백준 ${problem_info.problem_num}번 : ${problem_info.title_ko}
-*
-* 문제 주소 : https://www.acmicpc.net/problem/${problem_info.problem_num}
-*/
-        
-#include <iostream>
-        
-int main() {
-    
-            
-    return 0;
-}`;
-        } else if(arg === `py`){
+        if(arg === `py`){
             main_content = `#
 # 백준 ${problem_info.problem_num}번 : ${problem_info.title_ko}
 #
 # 문제 주소 : https://www.acmicpc.net/problem/${problem_info.problem_num}
 #
 
-`;      
+`;     
         } else {
-            this.logger.log(new Error(`expected arg : cpp or py , but arg is ${arg}`));
-            return;
-        }
-            let main_file = "";
+            main_content = `/* 
+* 백준 ${problem_info.problem_num}번 : ${problem_info.title_ko}
+*
+* 문제 주소 : https://www.acmicpc.net/problem/${problem_info.problem_num}
+*/
+        
+`;
+        } 
 
-            if (isResolve){
+        let main_file = "";
 
-                let files = fs.readdirSync(problem_path);
-                let idx = 0;
+        if (isResolve){
 
-                for (const file of files){
-                    if (/^[0-9]$/.test((file.slice(4, 5)))){
-                        idx = Math.max(idx, Number(file.slice(4, 5)));
-                    }
+            let files = fs.readdirSync(problem_path);
+            let idx = 0;
+
+            for (const file of files){
+                if (/^[0-9]$/.test((file.slice(4, 5)))){
+                    idx = Math.max(idx, Number(file.slice(4, 5)));
                 }
-                
-                main_file = `main${idx + 1}.${arg}`;
-
-            } else {
-                main_file = `main.${arg}`;
             }
 
-            fs.writeFileSync(path.join(problem_path, `${main_file}`), main_content);
-            vscode.window.showInformationMessage(`백준 ${problem_info.problem_num}번 폴더 및 파일 생성 완료!`);
-            const problem = path.join(problem_path, `${main_file}`);
+            main_file = `main${idx + 1}.${arg}`;
+
+        } else {
+            main_file = `main.${arg}`;
+        }
+
+        fs.writeFileSync(path.join(problem_path, `${main_file}`), main_content);
+        vscode.window.showInformationMessage(`백준 ${problem_info.problem_num}번 폴더 및 파일 생성 완료!`);
+        const problem = path.join(problem_path, `${main_file}`);
             
-            const document = await vscode.workspace.openTextDocument(problem);
-            await vscode.window.showTextDocument(document);
-        };
+        const document = await vscode.workspace.openTextDocument(problem);
+        await vscode.window.showTextDocument(document);
+    };
 }
