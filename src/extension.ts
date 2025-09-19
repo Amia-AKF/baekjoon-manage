@@ -26,6 +26,7 @@ export async function activate(context: vscode.ExtensionContext) {
         notion_manager.init();
     }
 
+    
     let create_baekjoon_cpp = vscode.commands.registerCommand('extension.createBaekjoonTemplate.cpp', async () =>{
         await problem_manager.create_vsfile('cpp');
     });
@@ -33,6 +34,15 @@ export async function activate(context: vscode.ExtensionContext) {
     let create_baekjoon_py = vscode.commands.registerCommand('extension.createBaekjoonTemplate.py', async () =>{
         await problem_manager.create_vsfile('py');
     });
+
+    let create_baekjoon_java = vscode.commands.registerCommand('extension.createBaekjoonTemplate.java', async () =>{
+        await problem_manager.create_vsfile('java');
+    });
+
+    let create_baekjoon_js = vscode.commands.registerCommand('extension.createBaekjoonTemplate.js', async () =>{
+        await problem_manager.create_vsfile('js');
+    });
+
 
 
     let create_notion_page_from_input = vscode.commands.registerCommand('extension.createNotionFromInput', async () =>{
@@ -42,6 +52,8 @@ export async function activate(context: vscode.ExtensionContext) {
     let create_notion_page_from_editor = vscode.commands.registerCommand('extension.createNotionFromEditor', async () =>{
        await notion_manager.upload_problem_from_editor();
     });
+
+    
 
     let del_notion_token = vscode.commands.registerCommand('extension.delNotionToken', async () => {
         try{
@@ -93,12 +105,12 @@ export async function activate(context: vscode.ExtensionContext) {
                 notion_manager.update_config(config);
                 notion_manager.update_id(id);
             } else if (id === '') {
-                //config.update("enableNotionFeature", false, vscode.ConfigurationTarget.Global)
+                config.update("enableNotionFeature", false, vscode.ConfigurationTarget.Global);
             }
         }
     });
 
-    context.subscriptions.push(create_baekjoon_cpp, create_baekjoon_py, create_notion_page_from_input, create_notion_page_from_editor, del_notion_token, change_notion_token, change_page_id);
+    context.subscriptions.push(create_baekjoon_cpp, create_baekjoon_py, create_baekjoon_java, create_baekjoon_js, create_notion_page_from_input, create_notion_page_from_editor, del_notion_token, change_notion_token, change_page_id);
 }
 
 
