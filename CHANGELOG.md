@@ -11,3 +11,9 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 - 폴더 구조 자동 생성 기능
 - 문제 파일 열기 기능
 
+## [1.1.0] - 2025-09-19
+### Adjusted
+- 중복 파일 생성 안되는 문제점 고침
+
+### Added
+- java 및 js 등등 지원
