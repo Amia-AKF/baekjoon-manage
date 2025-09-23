@@ -13,7 +13,7 @@
   "bugs": {
     "url": "https://github.com/Amia-AKF/baekjoon-manage/issues"
   },
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "MIT",
   "engines": {
     "vscode": "^1.97.0"
@@ -21,13 +21,15 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": ["onStartupFinished"],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
   "main": "./out/extension.js",
   "contributes": {
     "configuration": {
       "title": "Baekjoon Problem Manager",
       "properties": {
-        "baekjoon-manage.enableNotionFeature":{
+        "baekjoon-manage.enableNotionFeature": {
           "type": "boolean",
           "default": true,
           "description": "노션 기능 활성화 여부",
@@ -125,7 +127,6 @@
           "command": "extension.changeNotionDatabaseID",
           "when": "config.baekjoon-manage.enableNotionFeature"
         }
-  
       ]
     }
   },
