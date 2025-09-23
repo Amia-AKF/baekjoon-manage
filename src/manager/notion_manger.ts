@@ -113,7 +113,6 @@ export class Notion_manager {
 
         const answer = document.getText();
         
-
         const notion_service = this.notion_service;
 
         const result = await vscode.window.withProgress({

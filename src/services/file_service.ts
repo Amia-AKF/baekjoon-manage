@@ -150,6 +150,21 @@ export class File_service {
         await vscode.window.showTextDocument(document);
     }
 
+
+    /*
+    private async get_main(problem_path:string){
+
+        if (fs.existsSync(problem_path)){
+            const files = fs.readFileSync(problem_path);
+
+            for (const file of files){
+                
+            }
+        } 
+    }
+    */
+   
+
     /**
      * 문제 파일을 만듬
      * @param rootPath 현재 워크 스페이스 주소
@@ -223,6 +238,7 @@ export class File_service {
         } else {
             main_file = `main.${arg}`;
         }
+
 
         fs.writeFileSync(path.join(problem_path, `${main_file}`), main_content);
         vscode.window.showInformationMessage(`백준 ${problem_info.problem_num}번 폴더 및 파일 생성 완료!`);
