@@ -42,19 +42,15 @@ export class Notion_service {
                         tags: tag,
                 }),
                 children: [
-                    make_rich_text("heading_2" , `문제 개요`),
                     make_rich_text("heading_3" , 
 `문제 번호 : ${num}
 문제 제목 : ${title_ko}
 난이도 : ${off} , ${sub}
-유형 : ${tag.join(", ")}
-`),
+유형 : ${tag.join(", ")}`),
                     make_rich_text("heading_2", "해결 아이디어"),
                     make_rich_text("paragraph", ""),
                     make_rich_text("heading_2", "풀이 코드 "),
-                    make_rich_text("paragraph", ""),
-                    make_rich_text("code", answer, {languages: "python"}),
-                    make_rich_text("heading_2", "메모 / 실수한 점")
+                    make_rich_text("code", answer, {languages: 'python'}),
                 ]
             });
             return true;
