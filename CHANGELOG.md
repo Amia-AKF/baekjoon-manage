@@ -17,3 +17,8 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ### Added
 - java 및 js 등등 지원
+
+## [1.1.1] - 2025-11-28
+### changed
+- main 이름 변경
+- 노션에 코드 부분에 해당 언어로 변경

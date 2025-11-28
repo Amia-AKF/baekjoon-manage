@@ -10,7 +10,7 @@ VS Code에서 백준 문제를 효율적으로 정리하고, Notion에 자동으
 - 백준 문제를 **난이도별 폴더 구조**로 정리
 - VS Code에서 문제 파일을 자동으로 탐색 및 열기
 - 현재 에디터의 코드 내용을 **Notion에 전송**
-- Python / C++ 등 주요 언어 지원
+- Python / C++ / Java / Javascript 등 주요 언어 지원
 - 단축키로 빠르게 문제 풀이 백업
 
 ##  폴더 구조 예시
@@ -19,10 +19,12 @@ VS Code에서 백준 문제를 효율적으로 정리하고, Notion에 자동으
 coding-challenges/
 ├── Bronze/
 │ └── baekjoon_1000/
-│   └── main.py
+│   │   solution1.py
+│   └── solution2.py
 ├── Silver/
 │ └── baekjoon_1002/
-│   └── main.cpp
+│   │   solution1.java
+│   └── solution2.js
 └──────────────
 ```
 
