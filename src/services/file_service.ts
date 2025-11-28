@@ -149,20 +149,6 @@ export class File_service {
 
         await vscode.window.showTextDocument(document);
     }
-
-
-    /*
-    private async get_main(problem_path:string){
-
-        if (fs.existsSync(problem_path)){
-            const files = fs.readFileSync(problem_path);
-
-            for (const file of files){
-                
-            }
-        } 
-    }
-    */
    
 
     /**
@@ -228,15 +214,16 @@ export class File_service {
             let idx = 0;
 
             for (const file of files){
-                if (/^[0-9]$/.test((file.slice(4, 5)))){
-                    idx = Math.max(idx, Number(file.slice(4, 5)));
+                const match = file.match(/^solution(\d+)\./);
+                if (match){
+                    idx = Math.max(idx, Number(match[1]));
                 }
             }
 
-            main_file = `main${idx + 1}.${arg}`;
+            main_file = `solution${idx + 1}.${arg}`;
 
         } else {
-            main_file = `main.${arg}`;
+            main_file = `solution1.${arg}`;
         }
 
 

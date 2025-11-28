@@ -10,17 +10,9 @@ export class Notion_manager {
 
     private notion_service: Notion_service;
 
-    private raw_tags: string;
-    private tags: string[];
 
     constructor(private logger: Logger, private context: vscode.ExtensionContext, private config: vscode.WorkspaceConfiguration, private file_service: File_service, private problem_service: Problem_service) {
         this.notion_service = new Notion_service(logger);
-
-        this.raw_tags = this.config.get<string>('manageTags') ?? '기타(직접 입력)';
-        this.tags = this.raw_tags
-            .split(',')
-            .map(tag => tag.trim())
-            .filter(tag => tag.length > 0);
     }
 
     public update_config(config: vscode.WorkspaceConfiguration) {
@@ -67,14 +59,14 @@ export class Notion_manager {
             }
         );
 
-        this.raw_tags = this.config.get<string>('manageTags') ?? '';
-        this.tags = this.raw_tags
+        const raw_tags = this.config.get<string>('manageTags') ?? '기타(직접 입력)';
+        const filtered_tags = raw_tags
             .split(',')
             .map(tag => tag.trim())
             .filter(tag => tag.length > 0);
 
-        let tag = await vscode.window.showQuickPick(
-            this.tags,
+        let selected_tag = await vscode.window.showQuickPick(
+            filtered_tags,
             {
                 canPickMany: true,
                 placeHolder: "알고리즘 유형을 선택하거나 직접 입력하려면 기타를 클릭 해주세요 (space로 선택)",
@@ -82,12 +74,12 @@ export class Notion_manager {
             }
         );
 
-        if (!sub_lev || !tag) {
+        if (!sub_lev || !selected_tag) {
             return;
         }
 
-        if (tag.includes("기타(직접 입력)")) {
-            tag.pop();
+        if (selected_tag.includes("기타(직접 입력)")) {
+            selected_tag.pop();
             const input = await vscode.window.showInputBox({
                 prompt: "알고리즘 유형을 입력하세요",
                 validateInput: text => text.trim() === "" ? "입력은 필수입니다." : null
@@ -97,29 +89,38 @@ export class Notion_manager {
                 return;
             }
 
-            if (!this.tags.includes(input)) {
-                this.tags.splice(this.tags.length - 1, 0, input);
+            if (!filtered_tags.includes(input)) {   //필터링된 태그에 입력된 태그가 없다면 필터링 태그 배열에 ,기타(입력) 왼쪽에 삽입
+                filtered_tags.splice(filtered_tags.length - 1, 0, input);
             }
 
-            if(!tag.includes(input)){
-                tag.push(input);
+            if(!selected_tag.includes(input)){  //동일한 입력이 아니라면 입력 삽입
+                selected_tag.push(input);
             }
 
-            await this.config.update("manageTags", this.tags.join(", "), vscode.ConfigurationTarget.Global);
+            await this.config.update("manageTags", filtered_tags.join(", "), vscode.ConfigurationTarget.Global);  // 태그 저장
         }
 
         const tier = this.file_service.get_tier(problem_info.level);
         const tier_num = this.file_service.get_tier_num(problem_info.level);
 
         const answer = document.getText();
-        
-        const notion_service = this.notion_service;
+        let file_arg = document.fileName.split('.')[1]
+        const arg = new Map<string, string>([
+            ["py", "python"],
+            ["js", "javascript"],
+            ["ts", "typescript"],
+            ["java", "java"],
+            ["c", "c"],
+            ["cpp", "c++"],
+            ["cs", "c#"],
+        ])
+
 
         const result = await vscode.window.withProgress({
             location: vscode.ProgressLocation.Notification,
             title: "노션에다 내용 쓰는 중",
             cancellable: false
-        }, () => notion_service.make_notion_page(problem_info.problem_num, problem_info.title_ko, tier + tier_num, sub_lev.label, tag, answer));
+        }, () => this.notion_service.make_notion_page(problem_info.problem_num, problem_info.title_ko, tier + tier_num, sub_lev.label, selected_tag, answer, arg.get(file_arg) ?? "plain text"));
 
         if (result) {
             vscode.window.showInformationMessage(`문제 ${problem_info.problem_num}번 노션 파일 생성 완료!`);
@@ -128,41 +129,6 @@ export class Notion_manager {
         }
     }
 
-    public async upload_problem_from_input() {
-        
-        if(await this.check_enable_notion()){
-            return;
-        }
-
-        const workspaceFolders = vscode.workspace.workspaceFolders;
-
-        if (!workspaceFolders) {
-            vscode.window.showErrorMessage("작업 폴더를 먼저 열어주세요.");
-            return;
-        }
-
-        const problemNumber = await vscode.window.showInputBox({ prompt: "백준 문제 번호를 입력하세요", placeHolder: "1000" },);
-
-        if (!problemNumber) {
-            return;
-        }
-
-        const problem_info = await this.get_problem_info(problemNumber);
-
-        if (!problem_info) {
-            vscode.window.showErrorMessage("문제 정보를 가져오는데 실패했습니다.");
-            return;
-        }
-
-        const rootPath = workspaceFolders[0].uri.fsPath;
-        const document = await this.file_service.get_problem_file(rootPath, problem_info);
-
-        if(!document){
-            return;
-        }
-
-        await this.create_notion_file(problem_info, document);
-    }
 
     public async upload_problem_from_editor(){
         

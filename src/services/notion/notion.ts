@@ -30,7 +30,7 @@ export class Notion_service {
         this.database_id = id;
     }
 
-    public async make_notion_page(num: number, title_ko: string, off: string, sub: string, tag: string[], answer:string) {
+    public async make_notion_page(num: number, title_ko: string, off: string, sub: string, tag: string[], answer:string, arg:string) {
         try {
             const response = await this.notion.pages.create({
                 parent: { database_id: this.database_id }, 
@@ -50,7 +50,7 @@ export class Notion_service {
                     make_rich_text("heading_2", "해결 아이디어"),
                     make_rich_text("paragraph", ""),
                     make_rich_text("heading_2", "풀이 코드 "),
-                    make_rich_text("code", answer, {languages: 'python'}),
+                    make_rich_text("code", answer, {languages: arg}),
                 ]
             });
             return true;

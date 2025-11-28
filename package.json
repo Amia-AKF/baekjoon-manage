@@ -70,11 +70,6 @@
         "category": "Baekjoon Manager"
       },
       {
-        "command": "extension.createNotionFromInput",
-        "title": "Create Notion File From Input",
-        "category": "Baekjoon Manager"
-      },
-      {
         "command": "extension.createNotionFromEditor",
         "title": "Create Notion File From Editor",
         "category": "Baekjoon Manager"
@@ -107,10 +102,6 @@
     ],
     "menus": {
       "commandPalette": [
-        {
-          "command": "extension.createNotionFromInput",
-          "when": "config.baekjoon-manage.enableNotionFeature"
-        },
         {
           "command": "extension.createNotionFromEditor",
           "when": "config.baekjoon-manage.enableNotionFeature"
@@ -151,7 +142,6 @@
   },
   "dependencies": {
     "@notionhq/client": "^3.1.3",
-    "axios": "^1.10.0",
-    "dotenv": "^16.5.0"
+    "axios": "^1.10.0"
   }
 }

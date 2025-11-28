@@ -44,11 +44,6 @@ export async function activate(context: vscode.ExtensionContext) {
     });
 
 
-
-    let create_notion_page_from_input = vscode.commands.registerCommand('extension.createNotionFromInput', async () =>{
-       await notion_manager.upload_problem_from_input();
-    });
-
     let create_notion_page_from_editor = vscode.commands.registerCommand('extension.createNotionFromEditor', async () =>{
        await notion_manager.upload_problem_from_editor();
     });
@@ -110,7 +105,7 @@ export async function activate(context: vscode.ExtensionContext) {
         }
     });
 
-    context.subscriptions.push(create_baekjoon_cpp, create_baekjoon_py, create_baekjoon_java, create_baekjoon_js, create_notion_page_from_input, create_notion_page_from_editor, del_notion_token, change_notion_token, change_page_id);
+    context.subscriptions.push(create_baekjoon_cpp, create_baekjoon_py, create_baekjoon_java, create_baekjoon_js,  create_notion_page_from_editor, del_notion_token, change_notion_token, change_page_id);
 }
 
 
