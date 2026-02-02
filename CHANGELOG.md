@@ -2,8 +2,6 @@
 
 All notable changes to the "backjoon-manage" extension will be documented in this file.
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
-
 ## [1.0.0] - 2025-07-15
 ### Added
 - 초기 확장 배포
@@ -22,3 +20,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ### changed
 - main 이름 변경
 - 노션에 코드 부분에 해당 언어로 변경
+
+## [1.1.2] - 2025-02-02
+### fixed
+- main 이름 바꾼 파일을 못 여는 현상 해결

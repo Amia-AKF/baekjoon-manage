@@ -108,13 +108,16 @@ export class File_service {
 
         try{
             for(const file of files){
-                if(file.startsWith("main.")){
+                if(file.startsWith("solution1.")){
                     file_path = path.join(problem_path, file);
                     break;
+                } else {
+                    this.logger.log(new Error("파일을 찾을 수 없음"), `can't find solution file in ${problem_path} `);
+                    return;
                 }
             }
         }  catch (err) {
-            this.logger.log(err, `can't find file`);
+            this.logger.log(err, `can't find solution file`);
             return;
         }
 
