@@ -3,6 +3,7 @@
   "publisher": "Amia-bmwn",
   "displayName": "Baekjoon Problem Manager",
   "description": "백준 문제 자동 정리하고 Notion에 백업하는 익스텐션입니다.",
+  "deprecated": true,
   "repository": {
     "type": "git",
     "url": "https://github.com/Amia-AKF/baekjoon-manage"
@@ -135,7 +136,7 @@
     "@types/vscode": "^1.97.0",
     "@typescript-eslint/eslint-plugin": "^8.22.0",
     "@typescript-eslint/parser": "^8.22.0",
-    "@vscode/test-cli": "^0.0.10",
+    "@vscode/test-cli": "^0.0.12",
     "@vscode/test-electron": "^2.4.1",
     "eslint": "^9.19.0",
     "typescript": "^5.7.3"
